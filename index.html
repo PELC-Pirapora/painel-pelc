@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel PELC — Licitações e Contratos 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f0f4fa;color:#1a2640;min-height:100vh}
+.header{background:linear-gradient(135deg,#3b6abf,#5b8dd9);color:#fff;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.header-logo{width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;text-align:center;line-height:1.3}
+.header-text h1{font-size:17px;font-weight:600}
+.header-text p{font-size:12px;opacity:0.85;margin-top:2px}
+.container{max-width:1100px;margin:0 auto;padding:1.25rem}
+.fonte{font-size:11px;color:#aab0c0;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
+.fonte span{color:#5b8dd9;cursor:pointer;text-decoration:underline}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
+@media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr!important}}
+.card{background:#fff;border-radius:10px;padding:.9rem 1rem;border:0.5px solid #dde4f0}
+.card-label{font-size:11px;color:#6b7a99;margin-bottom:5px}
+.card-value{font-size:24px;font-weight:600;color:#1a2640}
+.card-sub{font-size:11px;color:#8a97b0;margin-top:2px}
+.card.danger .card-value{color:#c0392b}
+.card.warning .card-value{color:#d4860a}
+.card.success .card-value{color:#1a7a4a}
+.search-wrap{background:#fff;border-radius:10px;padding:.9rem 1rem;border:0.5px solid #dde4f0;margin-bottom:1rem}
+.search-row{display:flex;gap:8px;align-items:center}
+.search-wrap input{flex:1;border:0.5px solid #dde4f0;border-radius:7px;padding:7px 10px;font-size:13px;outline:none}
+.search-wrap input:focus{border-color:#5b8dd9}
+.search-wrap button{background:#3b6abf;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:13px;cursor:pointer;white-space:nowrap}
+.search-result{margin-top:10px;padding:9px 12px;border-radius:7px;font-size:13px;display:none}
+.search-result.found{background:#eaf3e8;border:0.5px solid #a8d5a2;color:#1a5c2e}
+.search-result.not-found{background:#fdecea;border:0.5px solid #f5b7b1;color:#922b21}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.panel{background:#fff;border-radius:10px;border:0.5px solid #dde4f0;padding:1rem}
+.section-title{font-size:13px;font-weight:600;color:#3b6abf;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.tabs{display:flex;gap:5px;margin-bottom:10px}
+.tab{padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;border:0.5px solid #dde4f0;background:#f0f4fa;color:#6b7a99}
+.tab.active{background:#3b6abf;color:#fff;border-color:#3b6abf}
+.fila-item{padding:8px 0;border-bottom:0.5px solid #eef1f7;display:flex;align-items:flex-start;gap:8px;font-size:12px}
+.fila-item:last-child{border-bottom:none}
+.pos{width:26px;height:26px;border-radius:50%;background:#eef2fb;color:#3b6abf;font-weight:600;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+.badge.prio{background:#fdecea;color:#922b21}
+.badge.crono{background:#eaf3e8;color:#1a5c2e}
+.fila-info{flex:1;min-width:0}
+.fila-num{font-weight:600;color:#1a2640;font-size:12px}
+.fila-desc{color:#6b7a99;font-size:11px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fila-data{color:#8a97b0;font-size:11px;margin-top:1px}
+.dias-badge{font-size:10px;background:#fff8e1;color:#7a5c00;border:0.5px solid #f0c040;border-radius:5px;padding:2px 6px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.dias-badge.alerta{background:#fdecea;color:#922b21;border-color:#f5b7b1}
+.chart-wrap{position:relative;width:100%;height:210px}
+.loading{text-align:center;padding:2rem;color:#8a97b0;font-size:13px}
+.erro{background:#fdecea;border:0.5px solid #f5b7b1;color:#922b21;padding:10px 14px;border-radius:8px;font-size:13px;margin:1rem 0}
+.footer{text-align:center;font-size:11px;color:#aab0c0;padding:1rem;margin-top:.5rem}
+.atualizado{font-size:11px;color:#8a97b0}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-logo">PELC<br>PGM</div>
+  <div class="header-text">
+    <h1>Painel de Acompanhamento — PELC/PGM</h1>
+    <p>Procuradoria Especializada em Licitações e Contratos · Pirapora/MG · 2026</p>
+  </div>
+</div>
+<div class="container">
+<div class="fonte">
+  Fonte: Planilha de controle PELC/PGM · <span onclick="carregarDados()">↻ Atualizar dados</span>
+  <span class="atualizado" id="atualizado"></span>
+</div>
+<div id="loading" class="loading">Carregando dados da planilha...</div>
+<div id="erro" class="erro" style="display:none"></div>
+<div id="conteudo" style="display:none">
+<div class="cards">
+  <div class="card warning">
+    <div class="card-label">⏳ Aguardando análise</div>
+    <div class="card-value" id="ct-aguardando">—</div>
+    <div class="card-sub">na fila agora</div>
+  </div>
+  <div class="card danger">
+    <div class="card-label">🚨 Prioridades na fila</div>
+    <div class="card-value" id="ct-prio">—</div>
+    <div class="card-sub">aguardando análise</div>
+  </div>
+  <div class="card success">
+    <div class="card-label">✅ Concluídos em 2026</div>
+    <div class="card-value" id="ct-concluidos">—</div>
+    <div class="card-sub">processos/consultas</div>
+  </div>
+  <div class="card">
+    <div class="card-label">📅 Mais antigo (crono)</div>
+    <div class="card-value" id="ct-mais-antigo" style="font-size:13px;margin-top:4px;line-height:1.4">—</div>
+    <div class="card-sub" id="ct-mais-antigo-dias"></div>
+  </div>
+</div>
+<div class="search-wrap">
+  <div class="search-row">
+    <input type="text" id="busca-input" placeholder="Busque pelo número do processo, secretaria ou palavra-chave (ex: SESAU, 044/2026, fraldas)…" />
+    <button onclick="buscar()">Buscar</button>
+  </div>
+  <div class="search-result" id="search-result"></div>
+</div>
+<div class="grid2">
+  <div class="panel">
+    <div class="section-title">📋 Fila atual — aguardando análise</div>
+    <div class="tabs">
+      <div class="tab active" onclick="filtrarFila('todos',this)">Todos</div>
+      <div class="tab" onclick="filtrarFila('prio',this)">Prioridades</div>
+      <div class="tab" onclick="filtrarFila('crono',this)">Cronológicos</div>
+    </div>
+    <div id="fila-lista" style="max-height:420px;overflow-y:auto"></div>
+  </div>
+  <div class="panel">
+    <div class="section-title">🥧 Distribuição 2026 — prioridade × cronológico</div>
+    <div id="legenda-pizza" style="display:flex;gap:14px;margin-bottom:8px;font-size:12px;color:#6b7a99;flex-wrap:wrap"></div>
+    <div class="chart-wrap"><canvas id="pizzaChart" role="img" aria-label="Distribuição entre prioritários e cronológicos em 2026"></canvas></div>
+    <div style="margin-top:1.25rem">
+      <div class="section-title">⏱ Tempo médio de análise — concluídos (dias)</div>
+      <div class="chart-wrap" style="height:150px"><canvas id="tempoChart" role="img" aria-label="Tempo médio de análise por tipo"></canvas></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="footer">PELC/PGM · Município de Pirapora/MG · Painel público de acompanhamento</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vToduxbIG9NPcDSTH50Ilwl4th8WSm76Eyb2Yq_cpXjvD3gACIhMEeldVWkntLtKdd8I6NdYIBLWZBd/pub?output=csv';
+function parseCSV(txt){
+  const linhas=txt.trim().split('\n');
+  const headers=linhas[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return linhas.slice(1).map(linha=>{
+    const cols=[];let cur='',inQ=false;
+    for(let i=0;i<linha.length;i++){
+      const c=linha[i];
+      if(c==='"'){inQ=!inQ;}
+      else if(c===','&&!inQ){cols.push(cur.trim());cur='';}
+      else{cur+=c;}
+    }
+    cols.push(cur.trim());
+    const obj={};
+    headers.forEach((h,i)=>{obj[h]=(cols[i]||'').replace(/^"|"$/g,'').trim();});
+    return obj;
+  }).filter(r=>r['Nº']&&r['Nº']!=='');
+}
+function parseData(s){
+  if(!s||s.trim()==='')return null;
+  const m=s.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+  if(m)return new Date(+m[3],+m[2]-1,+m[1]);
+  const m2=s.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if(m2)return new Date(+m2[1],+m2[2]-1,+m2[3]);
+  return null;
+}
+function diasEntre(d1,d2){if(!d1||!d2)return null;return Math.round((d2-d1)/(1000*60*60*24));}
+function fmt(d){if(!d)return'—';return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;}
+function isPrio(v){return v&&/sim/i.test(v.trim());}
+function isConcluido(s){
+  if(!s||s.trim()==='')return false;
+  if(/arquivado|cancelad/i.test(s))return true;
+  return parseData(s)!==null;
+}
+let processados=[],fila=[],concluidos=[],filtroAtual='todos';
+let pizzaChart=null,tempoChart=null;
+async function carregarDados(){
+  document.getElementById('loading').style.display='block';
+  document.getElementById('conteudo').style.display='none';
+  document.getElementById('erro').style.display='none';
+  try{
+    const resp=await fetch(CSV_URL);
+    if(!resp.ok)throw new Error();
+    const txt=await resp.text();
+    const rows=parseCSV(txt);
+    const hoje=new Date();
+    processados=rows.map(r=>{
+      const entradaDt=parseData(r['Data de Entrada']);
+      const saidaStr=r['Data de Saída']||'';
+      const concluido=isConcluido(saidaStr);
+      const saidaDt=concluido?parseData(saidaStr):null;
+      const prio=isPrio(r['Prioridade']);
+      return{seq:r['Nº'],demanda:r['Demanda']||'',desc:r['Descrição']||'',entradaDt,saidaDt,concluido,prio};
+    });
+    fila=processados.filter(d=>!d.concluido&&d.entradaDt).sort((a,b)=>{
+      if(a.prio!==b.prio)return a.prio?-1:1;
+      return a.entradaDt-b.entradaDt;
+    });
+    concluidos=processados.filter(d=>d.concluido);
+    const prioAtivas=fila.filter(d=>d.prio).length;
+    const cronoFila=fila.filter(d=>!d.prio);
+    const maisAntigo=cronoFila.length?cronoFila[0]:null;
+    document.getElementById('ct-aguardando').textContent=fila.length;
+    document.getElementById('ct-prio').textContent=prioAtivas;
+    document.getElementById('ct-concluidos').textContent=concluidos.length;
+    if(maisAntigo){
+      const dias=diasEntre(maisAntigo.entradaDt,hoje);
+      document.getElementById('ct-mais-antigo').textContent=maisAntigo.demanda.substring(0,30)+(maisAntigo.demanda.length>30?'…':'');
+      document.getElementById('ct-mais-antigo-dias').textContent=`${dias} dias na fila · entrada ${fmt(maisAntigo.entradaDt)}`;
+    }
+    renderFila();renderGraficos();
+    const agora=new Date();
+    document.getElementById('atualizado').textContent=`· Atualizado às ${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('loading').style.display='none';
+    document.getElementById('conteudo').style.display='block';
+  }catch(e){
+    document.getElementById('loading').style.display='none';
+    const el=document.getElementById('erro');
+    el.style.display='block';
+    el.textContent='Não foi possível carregar os dados. Verifique a conexão e tente atualizar a página.';
+  }
+}
+function renderFila(){
+  const hoje=new Date();
+  const lista=document.getElementById('fila-lista');
+  let items=fila;
+  if(filtroAtual==='prio')items=fila.filter(d=>d.prio);
+  if(filtroAtual==='crono')items=fila.filter(d=>!d.prio);
+  if(!items.length){lista.innerHTML='<div style="padding:1rem;text-align:center;color:#8a97b0;font-size:13px">Nenhuma demanda nesta categoria.</div>';return;}
+  lista.innerHTML=items.map((d,i)=>{
+    const dias=diasEntre(d.entradaDt,hoje);
+    const alerta=dias>60;
+    return`<div class="fila-item"><div class="pos">${i+1}º</div><div class="fila-info"><div class="fila-num">${d.demanda}</div><div class="fila-desc">${d.desc}</div><div class="fila-data">Entrada: ${fmt(d.entradaDt)}</div></div><span class="badge ${d.prio?'prio':'crono'}">${d.prio?'PRIO':'Crono'}</span><span class="dias-badge ${alerta?'alerta':''}">${dias}d</span></div>`;
+  }).join('');
+}
+function filtrarFila(f,el){
+  filtroAtual=f;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');renderFila();
+}
+function buscar(){
+  const q=document.getElementById('busca-input').value.trim().toLowerCase();
+  const res=document.getElementById('search-result');
+  if(!q){res.style.display='none';return;}
+  const proc=processados.find(d=>d.demanda.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q)||d.seq.toLowerCase().includes(q));
+  if(!proc){res.style.display='block';res.className='search-result not-found';res.innerHTML=`Nenhuma demanda encontrada para "<strong>${q}</strong>".`;return;}
+  const hoje=new Date();
+  res.style.display='block';res.className='search-result found';
+  if(proc.concluido){
+    const dias=proc.saidaDt?diasEntre(proc.entradaDt,proc.saidaDt):'—';
+    res.innerHTML=`✅ <strong>${proc.demanda}</strong><br>${proc.desc}<br>Análise concluída em ${fmt(proc.saidaDt)} · ${dias} dias · ${proc.prio?'Prioridade':'Cronológico'}`;
+  }else{
+    const posGeral=fila.findIndex(d=>d.seq===proc.seq)+1;
+    const posNaTipo=fila.filter(d=>d.prio===proc.prio).findIndex(d=>d.seq===proc.seq)+1;
+    const diasFila=diasEntre(proc.entradaDt,hoje);
+    res.innerHTML=`⏳ <strong>${proc.demanda}</strong><br>${proc.desc}<br>Aguardando análise · Posição geral: <strong>${posGeral}º</strong> · Entre ${proc.prio?'prioridades':'cronológicos'}: <strong>${posNaTipo}º</strong> · <strong>${diasFila} dias</strong> na fila · Entrada: ${fmt(proc.entradaDt)}`;
+  }
+}
+document.getElementById('busca-input').addEventListener('keyup',e=>{if(e.key==='Enter')buscar();});
+function renderGraficos(){
+  const totalPrio=processados.filter(d=>d.prio).length;
+  const totalCrono=processados.filter(d=>!d.prio).length;
+  const total=totalPrio+totalCrono;
+  const pct=Math.round(totalPrio/total*100);
+  document.getElementById('legenda-pizza').innerHTML=`<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#c0392b;display:inline-block"></span>Prioridade — ${totalPrio} (${pct}%)</span><span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#3b6abf;display:inline-block"></span>Cronológico — ${totalCrono} (${100-pct}%)</span>`;
+  if(pizzaChart)pizzaChart.destroy();
+  pizzaChart=new Chart(document.getElementById('pizzaChart'),{type:'doughnut',data:{labels:['Prioridade','Cronológico'],datasets:[{data:[totalPrio,totalCrono],backgroundColor:['#c0392b','#3b6abf'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw} (${Math.round(c.raw/total*100)}%)`}}}}});
+  const tP=concluidos.filter(d=>d.prio&&d.saidaDt).map(d=>diasEntre(d.entradaDt,d.saidaDt));
+  const tC=concluidos.filter(d=>!d.prio&&d.saidaDt).map(d=>diasEntre(d.entradaDt,d.saidaDt));
+  const mP=tP.length?Math.round(tP.reduce((a,b)=>a+b,0)/tP.length):0;
+  const mC=tC.length?Math.round(tC.reduce((a,b)=>a+b,0)/tC.length):0;
+  if(tempoChart)tempoChart.destroy();
+  tempoChart=new Chart(document.getElementById('tempoChart'),{type:'bar',data:{labels:['Prioridade','Cronológico'],datasets:[{data:[mP,mC],backgroundColor:['#c0392b','#3b6abf'],borderRadius:5,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw} dias em média`}}},scales:{x:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11}}},y:{ticks:{font:{size:12}}}}}});
+}
+carregarDados();
+</script>
+</body>
+</html>
